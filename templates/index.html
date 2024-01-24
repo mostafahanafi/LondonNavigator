@@ -6,9 +6,10 @@
 <body>
     <h2>Find a Route</h2>
     <form action="/getroute" method="post">
-        <label for="start">Start Station:</label><br>
+        <p>Inputs should be either postcodes or lat,long coordinates (no whitespace).</p>
+        <label for="start">Start:</label><br>
         <input type="text" id="start" name="start" required><br>
-        <label for="end">End Station:</label><br>
+        <label for="end">End:</label><br>
         <input type="text" id="end" name="end" required><br><br>
         <input type="submit" value="Find Route">
     </form>
