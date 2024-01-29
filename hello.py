@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import requests
+import json
 from datetime import datetime
 
 app = Flask(__name__)
@@ -33,7 +34,18 @@ def getroute():
             # Add journey modes
             journey["modes"].append(leg["mode"]["name"])
 
-    return render_template('route.html', metadata=data["journeyVector"], journeys=data["journeys"])
+    # return render_template('route.html', metadata=data["journeyVector"], journeys=data["journeys"])
+    route1 = extract_route_coordinates(data["journeys"][0])
+    return jsonify(route1)
+
+def extract_route_coordinates(journey):
+    lineStrings = []
+    for leg in journey["legs"]:
+        lineString = json.loads(leg["path"]["lineString"])
+        lineStrings += lineString
+    return lineStrings
+        
+
 
 def extract_time(date_time):
     date_time_obj = datetime.strptime(date_time, '%Y-%m-%dT%H:%M:%S')
