@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Route Finder</title>
+    <title>LondonNavigator</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
@@ -51,13 +51,50 @@
             .catch(error => console.error('Error:', error));
         }
 
-
-        function drawRoute(coordinates) {
-            console.log(coordinates);
-
-            var polyline = L.polyline(coordinates, {color: 'blue'}).addTo(map);
-            map.fitBounds(polyline.getBounds());
+        function drawRoute(legs) {
+            legs.forEach(leg => {
+                var coordinates = leg.coordinates;
+                var { color, dashArray } = getPolylineStyle(leg.mode, leg.line);
+                var polyline = L.polyline(coordinates, {color: color, dashArray: dashArray}).addTo(map);
+                map.fitBounds(polyline.getBounds());
+            });
         }
+
+        function getPolylineStyle(mode, line) {
+            var style = {
+                color: 'grey',
+                dashArray: ''
+            };
+            
+            if (mode === 'walking') {
+                style.dashArray = '5, 5';
+            } else if (mode === 'bus') {
+                style.color = 'red';
+            } else if (mode === 'tube') {
+                style.color = tubeLineColour(line);
+            }
+
+            return style;
+        }
+
+        function tubeLineColour(line) {
+            var colours = {
+                'Bakerloo': '#B36305',
+                'Central': '#E32017',
+                'Circle': '#FFD300',
+                'District': '#00782A',
+                'Hammersmith-City': '#F3A9BB',
+                'Jubilee': '#A0A5A9',
+                'Metropolitan': '#9B0056',
+                'Northern': '#000000',
+                'Piccadilly': '#003688',
+                'Victoria': '#0098D4',
+                'Waterloo-City': '#95CDBA'
+            };
+
+            return colours[line] || 'grey';
+        }
+
     </script>
 </body>
 </html>

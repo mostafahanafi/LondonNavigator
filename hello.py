@@ -39,11 +39,17 @@ def getroute():
     return jsonify(route1)
 
 def extract_route_coordinates(journey):
-    lineStrings = []
+    leg_details = []
     for leg in journey["legs"]:
         lineString = json.loads(leg["path"]["lineString"])
-        lineStrings += lineString
-    return lineStrings
+        mode = leg["mode"]["name"]
+        line = leg["routeOptions"][0]["name"]
+        leg_details.append({
+            "coordinates": lineString,
+            "mode": mode,
+            "line": line
+        })
+    return leg_details
         
 
 
