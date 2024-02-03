@@ -78,18 +78,19 @@
         }
 
         function tubeLineColour(line) {
+            // Source: https://content.tfl.gov.uk/tfl-colour-standard-issue-08.pdf
             var colours = {
-                'Bakerloo': '#B36305',
-                'Central': '#E32017',
-                'Circle': '#FFD300',
-                'District': '#00782A',
-                'Hammersmith-City': '#F3A9BB',
-                'Jubilee': '#A0A5A9',
-                'Metropolitan': '#9B0056',
+                'Bakerloo': '#a65a2a',
+                'Central': '#e1251b',
+                'Circle': '#ffcc00',
+                'District': '#007934',
+                'Hammersmith-City': '#ec9bad',
+                'Jubilee': '#7b868c',
+                'Metropolitan': '#870f54',
                 'Northern': '#000000',
-                'Piccadilly': '#003688',
-                'Victoria': '#0098D4',
-                'Waterloo-City': '#95CDBA'
+                'Piccadilly': '#000f9f',
+                'Victoria': '#00a0df',
+                'Waterloo-City': '#6bcdb1'
             };
 
             return colours[line] || 'grey';
