@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Journey Details</title>
+    <style>
+        .journey, .leg {
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .journey > div, .leg > div {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .journey > h3, .leg > h4 {
+            margin: 0;
+        }
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            background-size: cover;
+        }
+        .journey-duration {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <h2>Journey Details - {{ metadata.from }} to {{ metadata.to }}</h2>
+    {% for journey in journeys %}
+        <div class="journey">
+            <h3 onclick="toggleVisibility(this)">
+                Journey {{ loop.index }} 
+                <small>({{ journey.startDateTime }} - {{ journey.arrivalDateTime }})</small>
+                {% for mode in journey.modes %}
+                    <span class="icon" style="background-image: url('{{ url_for('static', filename='icons/' ~ mode ~ '.png') }}')"></span>
+                {% endfor %}
+                <span class="journey-duration">{{ journey.duration }} minutes</span>
+            </h3>
+            <div>
+                <p><b>Start Time:</b> {{ journey.startDateTime }}</p>
+                <p><b>Arrival Time:</b> {{ journey.arrivalDateTime }}</p>
+                <p><b>Duration:</b> {{ journey.duration }} minutes</p>
+                {% for leg in journey.legs %}
+                    <div class="leg" style="margin-left: 20px;">
+                        <h4 onclick="toggleVisibility(this)">Leg {{ loop.index }}</h4>
+                        <div>
+                            <p><b>Mode:</b> {{ leg.mode.name }}</p>
+                            <p><b>From:</b> {{ leg.departurePoint.commonName }}</p>
+                            <p><b>To:</b> {{ leg.arrivalPoint.commonName }}</p>
+                            <p><b>Departure Time:</b> {{ leg.departureTime }}</p>
+                            <p><b>Arrival Time:</b> {{ leg.arrivalTime }}</p>
+                            <p><b>Duration:</b> {{ leg.duration }} minutes</p>
+                            {% if leg.instruction %}
+                                <p><b>Instructions:</b> {{ leg.instruction.detailed }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <script>
+        function toggleVisibility(headerElement) {
+            var nextElement = headerElement.nextElementSibling;
+            if (nextElement.style.display === "none") {
+                nextElement.style.display = "block";
+            } else {
+                nextElement.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
