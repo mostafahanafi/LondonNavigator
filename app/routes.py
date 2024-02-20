@@ -18,8 +18,7 @@ def init_routes(app):
             return render_template('error.html')
         
         data = response.json()
-        journeys = [Journey(journey) for journey in data["journeys"]]
-        map_info = [journey.getMapData() for journey in journeys]
+        journeys = [Journey(journey).toJSON() for journey in data["journeys"]]
         # for now, we will only return the first journey
         # FIXME: We should return all the journeys
-        return jsonify(map_info[0])
+        return jsonify(journeys)

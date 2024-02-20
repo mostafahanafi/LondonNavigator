@@ -9,7 +9,7 @@ class Journey():
         self.startTime = self.extract_time(journey_json["startDateTime"])
         self.arrivalTime = self.extract_time(journey_json["arrivalDateTime"])
         self.duration = journey_json["duration"]
-        self.fare = journey_json["fare"] if "fare" in journey_json else 0
+        self.fare = journey_json["fare"] if "fare" in journey_json else None
     
     def extract_time(self, date_time):
         date_time_obj = datetime.strptime(date_time, '%Y-%m-%dT%H:%M:%S')
@@ -27,3 +27,14 @@ class Journey():
         } for leg in self.legs]
 
         return map_details
+    
+    def toJSON(self):
+        return {
+            "startTime": self.startTime,
+            "arrivalTime": self.arrivalTime,
+            "duration": self.duration,
+            "fare": self.fare,
+            "modes": self.modes,
+            "legs": self.legs,
+            "mapData": self.getMapData()
+        }

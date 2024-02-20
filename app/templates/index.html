@@ -10,8 +10,17 @@
      crossorigin=""></script>
      <style>
         #map {
-            height: 650px;
+            height: 720px;
         }
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            background-size: cover;
+        }
+        .icon.walking { background-image: url('static/icons/walking.png');}
+        .icon.bus { background-image: url('static/icons/bus.png');}
+        .icon.tube { background-image: url('static/icons/tube.png');}
     </style>
 </head>
 <body>
@@ -26,9 +35,12 @@
     </form>
 
     <div id="map"></div>
+    <div id="journeyDetails"></div>
+
     <script>
         var map = L.map('map').setView([51.505, -0.09], 13);
         var polylines = [];
+        var journeys;
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -48,7 +60,11 @@
             })
             .then(response => response.json())
             .then(data => {
-                drawRoute(data);
+                journeys = data;
+                displayJourneys(journeys);
+                if (journeys.length > 0) {
+                    toggleJourney(document.querySelector('.journey h3'), 0);
+                }
             })
             .catch(error => console.error('Error:', error));
         }
@@ -109,6 +125,65 @@
             };
 
             return colours[line] || 'grey';
+        }
+
+        function displayJourneys(journeys) {
+            var detailsContainer = document.getElementById('journeyDetails');
+            detailsContainer.innerHTML = '';
+
+            console.log(journeys);
+            journeys.forEach((journey, index) => {
+                console.log(journey);
+                var journeyDiv = document.createElement('div');
+                journeyDiv.className = 'journey';
+                journeyDiv.innerHTML =  `
+                    <h3>
+                        Journey ${index + 1}
+                        <small>(${journey.startTime} - ${journey.arrivalTime})</small>
+                        ${journey.modes.map(mode => `<span class="icon ${mode}"></span>`).join('')}
+                        <span class="journey-duration">${journey.duration} minutes</span>    
+                    </h3>
+                    <div>${journey.legs.map(leg => `
+                        <div class="leg">
+                            <h4>Leg</h4>
+                            <div>
+                                <p><b>Mode:</b> ${leg.mode.name}</p>
+                                <p><b>From:</b> ${leg.departurePoint.commonName}</p>
+                                <p><b>To:</b> ${leg.arrivalPoint.commonName}</p>
+                                <p><b>Departure Time:</b> ${leg.departureTime}</p>
+                                <p><b>Arrival Time:</b> ${leg.arrivalTime}</p>
+                                <p><b>Duration:</b> ${leg.duration} minutes</p>
+                                ${leg.instruction.detailed ? `<p><b>Instructions:</b> ${leg.instruction.detailed}</p>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}</div>
+                `;
+                detailsContainer.appendChild(journeyDiv);
+            });
+        }
+
+        document.getElementById('journeyDetails').addEventListener('click', function(event) {
+            if (event.target.tagName === 'H3' && event.target.parentElement.className === 'journey') {
+                var index = Array.from(this.children).indexOf(event.target.parentElement);
+                toggleJourney(event.target, index);
+            }
+        });
+
+        function toggleJourney(headerElement, index) {
+            // toggle visibility of journey details
+            var nextElement = headerElement.nextElementSibling;
+            nextElement.style.display = "block";
+            // hide other journeys
+            Array.from(headerElement.parentElement.parentElement.children).forEach((journey, i) => {
+                if (i !== index) {
+                    journey.children[1].style.display = "none";
+                }
+            });
+
+            clearRoute();
+            if (journeys && journeys.length > index) {
+                drawRoute(journeys[index].mapData);
+            }
         }
 
     </script>
