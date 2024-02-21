@@ -1,0 +1,18 @@
+#map {
+    height: 720px;
+}
+.icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background-size: cover;
+}
+.icon.walking { 
+    background-image: url('../icons/walking.png');
+}
+.icon.bus { 
+    background-image: url('../icons/bus.png');
+}
+.icon.tube { 
+    background-image: url('../icons/tube.png');
+}
