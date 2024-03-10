@@ -103,7 +103,7 @@ function displayJourneys(journeys) {
                 iconText += `<small>${leg.duration}</small>`;
             } else if (leg.mode === 'bus') {
                 var busNumber = leg.instructions.split(' ')[0];
-                iconText += `<small>${busNumber}</small>`;
+                iconText += `<small style="background-color: red; color: white; padding: 0 3px;">${busNumber}</small>`;
             } else if (leg.mode === 'tube') {
                 let line = journey.mapData[index].line;
                 iconText += `<small style="color: ${tubeLineColour(line)};">${line}</small>`;
@@ -120,16 +120,7 @@ function displayJourneys(journeys) {
         var journeyDetails = document.createElement('div');
         journeyDetails.innerHTML = journey.legs.map((leg, legIndex) => `
             <div class="leg">
-                <h4>Leg ${legIndex+1}</h4>
-                <div>
-                    <p><b>Mode:</b> ${leg.mode}</p>
-                    <p><b>From:</b> ${leg.from}</p>
-                    <p><b>To:</b> ${leg.to}</p>
-                    <p><b>Departure Time:</b> ${leg.startTime}</p>
-                    <p><b>Arrival Time:</b> ${leg.arrivalTime}</p>
-                    <p><b>Duration:</b> ${leg.duration} minutes</p>
-                    <p><b>Instructions:</b> ${leg.instructions}</p>
-                </div>
+                <p>${leg.instructions} (${leg.startTime} - ${leg.arrivalTime})</p>
             </div>
         `).join('');
 

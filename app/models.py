@@ -45,6 +45,10 @@ class Journey():
                 "duration": leg["duration"],
                 "instructions": leg["instruction"]["summary"],
             }
+            if leg["mode"]["name"] == "walking":
+                instructions = leg_data["instructions"].split(" ")
+                instructions.insert(1, f"{leg_data['duration']} minutes")
+                leg_data["instructions"] = " ".join(instructions)
             json_data["legs"].append(leg_data)
         
 
