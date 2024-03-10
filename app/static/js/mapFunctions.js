@@ -103,7 +103,7 @@ function displayJourneys(journeys) {
                 iconText += `<small>${leg.duration}</small>`;
             } else if (leg.mode === 'bus') {
                 var busNumber = leg.instructions.split(' ')[0];
-                iconText += `<small style="background-color: red; color: white; padding: 0 3px;">${busNumber}</small>`;
+                iconText += `<small style="background-color: #e1251b; color: white; padding: 0 3px;">${busNumber}</small>`;
             } else if (leg.mode === 'tube') {
                 let line = journey.mapData[index].line;
                 iconText += `<small style="color: ${tubeLineColour(line)};">${line}</small>`;
@@ -113,9 +113,13 @@ function displayJourneys(journeys) {
 
         var journeyHeader = document.createElement('h3');
         journeyHeader.innerHTML = `
-            <small>${journey.startTime} - ${journey.arrivalTime}</small>
-            ${journeySummary}
+        <div class="journey-header-top">
+            <span class="journey-summary">${journeySummary}</span>
             <span class="journey-duration">${journey.duration} minutes</span>
+        </div>
+        <div class="journey-header-bottom">
+            <p>${journey.startTime} - ${journey.arrivalTime}</p>
+        </div>
         `;
         var journeyDetails = document.createElement('div');
         journeyDetails.innerHTML = journey.legs.map((leg, legIndex) => `

@@ -59,11 +59,27 @@ body, html {
 }
 .journey h3 {
     cursor: pointer;
-    display: flex;
+    display: block;
     align-items: center;
     flex-wrap: wrap;
+    margin: 10px 0 0px;
 }
+
+.journey-header-top, .journey-header-bottom {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.journey-header-bottom p {
+    font-size: 12px;
+}
+
 .journey-duration {
     margin-left: auto;
     padding-left: 10px;
+}
+
+.journey-summary {
+    flex-grow: 1;
 }
