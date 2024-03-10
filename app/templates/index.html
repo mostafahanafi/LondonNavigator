@@ -12,17 +12,19 @@
      <script src="{{ url_for('static', filename='js/mapFunctions.js') }}" defer></script>
 </head>
 <body>
-    <h2>Find a Route</h2>
-    <form id="routeForm">
-        <p>Inputs should be either postcodes or lat,long coordinates (no whitespace).</p>
-        <label for="start">Start:</label><br>
-        <input type="text" id="start" name="start" required><br>
-        <label for="end">End:</label><br>
-        <input type="text" id="end" name="end" required><br><br>
-        <input type="button" value="Find Route" onclick="findRoute()">
-    </form>
-
-    <div id="map"></div>
-    <div id="journeyDetails"></div>
+    <div class="content-wrapper">
+        <div class="map-container">
+            <form id="routeForm">
+                <label for="start">Start:</label><br>
+                <input type="text" id="start" name="start" required><br>
+                <label for="end">End:</label><br>
+                <input type="text" id="end" name="end" required><br><br>
+                <input type="button" value="Find Route" onclick="findRoute()">
+                <small>Inputs should be either postcodes or lat,long coordinates (no whitespace).</small>
+            </form>
+            <div id="map"></div>
+        </div>
+        <div id="journeyDetails" class="journeys-container"></div>
+    </div>
 </body>
 </html>

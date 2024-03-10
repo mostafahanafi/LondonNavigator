@@ -42,6 +42,7 @@ function drawRoute(legs) {
     // bounds of entire route
     var bounds = L.featureGroup(polylines).getBounds();
     map.fitBounds(bounds);
+    map.invalidateSize();
 }
 
 function clearRoute() {
@@ -89,59 +90,72 @@ function tubeLineColour(line) {
 
 function displayJourneys(journeys) {
     var detailsContainer = document.getElementById('journeyDetails');
+    var mapContainer = document.getElementById('map-container');
     detailsContainer.innerHTML = '';
 
     journeys.forEach((journey, index) => {
         var journeyDiv = document.createElement('div');
         journeyDiv.className = 'journey';
+
         var journeySummary = journey.legs.map((leg, index) => {
-            if (leg.mode.name === 'walking') {
-                return `<span class="icon walking">${leg.duration}</span>`;
-            } else if (leg.mode.name === 'bus') {
-                var busNumber = leg.instruction.summary.split(' ')[0];
-                return `<span class="icon bus">${busNumber}</span>`;
-            } else if (leg.mode.name === 'tube') {
-                return `<span class="icon tube">${journey.mapData[index].line}</span>`;
+            let iconText = `<span class="icon ${leg.mode}"></span>`;
+            if (leg.mode === 'walking') {
+                iconText += `<small>${leg.duration}</small>`;
+            } else if (leg.mode === 'bus') {
+                var busNumber = leg.instructions.split(' ')[0];
+                iconText += `<small>${busNumber}</small>`;
+            } else if (leg.mode === 'tube') {
+                let line = journey.mapData[index].line;
+                iconText += `<small style="color: ${tubeLineColour(line)};">${line}</small>`;
             }
+            return `<span class="icon-text">${iconText}</span>`
         }).join('');
 
-        journeyDiv.innerHTML =  `
-            <h3>
-                Journey ${index + 1}
-                <small>(${journey.startTime} - ${journey.arrivalTime})</small>
-                ${journeySummary}
-                <span class="journey-duration">${journey.duration} minutes</span>    
-            </h3>
-            <div>${journey.legs.map(leg => `
-                <div class="leg">
-                    <h4>Leg</h4>
-                    <div>
-                        <p><b>Mode:</b> ${leg.mode.name}</p>
-                        <p><b>From:</b> ${leg.departurePoint.commonName}</p>
-                        <p><b>To:</b> ${leg.arrivalPoint.commonName}</p>
-                        <p><b>Departure Time:</b> ${leg.departureTime}</p>
-                        <p><b>Arrival Time:</b> ${leg.arrivalTime}</p>
-                        <p><b>Duration:</b> ${leg.duration} minutes</p>
-                        ${leg.instruction.detailed ? `<p><b>Instructions:</b> ${leg.instruction.detailed}</p>` : ''}
-                    </div>
-                </div>
-            `).join('')}</div>
+        var journeyHeader = document.createElement('h3');
+        journeyHeader.innerHTML = `
+            <small>${journey.startTime} - ${journey.arrivalTime}</small>
+            ${journeySummary}
+            <span class="journey-duration">${journey.duration} minutes</span>
         `;
+        var journeyDetails = document.createElement('div');
+        journeyDetails.innerHTML = journey.legs.map((leg, legIndex) => `
+            <div class="leg">
+                <h4>Leg ${legIndex+1}</h4>
+                <div>
+                    <p><b>Mode:</b> ${leg.mode}</p>
+                    <p><b>From:</b> ${leg.from}</p>
+                    <p><b>To:</b> ${leg.to}</p>
+                    <p><b>Departure Time:</b> ${leg.startTime}</p>
+                    <p><b>Arrival Time:</b> ${leg.arrivalTime}</p>
+                    <p><b>Duration:</b> ${leg.duration} minutes</p>
+                    <p><b>Instructions:</b> ${leg.instructions}</p>
+                </div>
+            </div>
+        `).join('');
+
+        journeyDiv.appendChild(journeyHeader);
+        journeyDiv.appendChild(journeyDetails);
+
         detailsContainer.appendChild(journeyDiv);
     });
 }
 
 document.getElementById('journeyDetails').addEventListener('click', function(event) {
-    if (event.target.tagName === 'H3' && event.target.parentElement.className === 'journey') {
-        var index = Array.from(this.children).indexOf(event.target.parentElement);
-        toggleJourney(event.target, index);
+    let targetElement = event.target;
+    // traverse up the DOM to find if the click was on a journey header
+    while (targetElement && targetElement.tagName !== 'H3') {
+        targetElement = targetElement.parentElement;
+    }
+    if (targetElement && targetElement.tagName === 'H3') {
+        var index = Array.from(this.children).indexOf(targetElement.parentElement);
+        toggleJourney(targetElement, index);
     }
 });
 
 function toggleJourney(headerElement, index) {
     // toggle visibility of journey details
     var nextElement = headerElement.nextElementSibling;
-    nextElement.style.display = "block";
+    nextElement.style.display = nextElement.style.display === "none" ? "block" : "none";
     // hide other journeys
     Array.from(headerElement.parentElement.parentElement.children).forEach((journey, i) => {
         if (i !== index) {

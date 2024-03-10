@@ -19,6 +19,4 @@ def init_routes(app):
         
         data = response.json()
         journeys = [Journey(journey).toJSON() for journey in data["journeys"]]
-        # for now, we will only return the first journey
-        # FIXME: We should return all the journeys
         return jsonify(journeys)

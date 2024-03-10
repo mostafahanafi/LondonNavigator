@@ -15,10 +15,6 @@ class Journey():
         date_time_obj = datetime.strptime(date_time, '%Y-%m-%dT%H:%M:%S')
         return date_time_obj.strftime("%H:%M")
 
-    # TODO: Implement this method
-    def extract_information(self):
-        pass
-
     def getMapData(self):
         map_details = [{
             "coordinates": json.loads(leg["path"]["lineString"]),
@@ -29,12 +25,27 @@ class Journey():
         return map_details
     
     def toJSON(self):
-        return {
+        json_data = {
             "startTime": self.startTime,
             "arrivalTime": self.arrivalTime,
             "duration": self.duration,
             "fare": self.fare,
             "modes": self.modes,
             "legs": self.legs,
-            "mapData": self.getMapData()
+            "mapData": self.getMapData(),
+            "legs": [],
         }
+        for leg in self.legs:
+            leg_data = {
+                "mode": leg["mode"]["name"],
+                "from": leg["departurePoint"]["commonName"],
+                "to": leg["arrivalPoint"]["commonName"],
+                "startTime": self.extract_time(leg["departureTime"]),
+                "arrivalTime": self.extract_time(leg["arrivalTime"]),
+                "duration": leg["duration"],
+                "instructions": leg["instruction"]["summary"],
+            }
+            json_data["legs"].append(leg_data)
+        
+
+        return json_data
