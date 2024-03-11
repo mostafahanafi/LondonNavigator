@@ -17,10 +17,11 @@
             <form id="routeForm">
                 <label for="start">Start:</label><br>
                 <input type="text" id="start" name="start" required><br>
+                <div id="startSuggestions" class="suggestions"></div>
                 <label for="end">End:</label><br>
                 <input type="text" id="end" name="end" required><br><br>
+                <div id="endSuggestions" class="suggestions"></div>
                 <input type="button" value="Find Route" onclick="findRoute()">
-                <small>Inputs should be either postcodes or lat,long coordinates (no whitespace).</small>
             </form>
             <div id="map"></div>
         </div>

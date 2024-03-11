@@ -50,6 +50,12 @@ body, html {
 .icon.tube { 
     background-image: url('../icons/tube.png');
 }
+.icon.elizabeth-line {
+    background-image: url('../icons/elizabeth.png');
+}
+.icon.national-rail {
+    background-image: url('../icons/national-rail.png');
+}
 
 .journey {
     border: 1px solid #ccc;

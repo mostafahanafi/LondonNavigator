@@ -20,3 +20,15 @@ def init_routes(app):
         data = response.json()
         journeys = [Journey(journey).toJSON() for journey in data["journeys"]]
         return jsonify(journeys)
+    
+    @app.route('/getsuggestions', methods=['POST'])
+    def getsuggestions():
+        query = request.form['query']
+
+        url = f"https://photon.komoot.io/api/?q={query}&bbox=-0.489,51.28,0.236,51.686"
+        response = requests.get(url)
+        if response.status_code != 200:
+            return render_template('error.html')
+        
+        data = response.json()
+        return jsonify(data)
