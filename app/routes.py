@@ -14,10 +14,14 @@ def init_routes(app):
 
         url = f"https://api.tfl.gov.uk/journey/journeyresults/{start}/to/{end}"
         response = requests.get(url)
-        if response.status_code != 200:
-            return render_template('error.html')
-        
         data = response.json()
+
+        if response.status_code != 200:
+            return jsonify({
+                'error': True,
+                'message': data.get('message', 'An error occurred while processing your request.')
+            }), 400
+        
         journeys = [Journey(journey).toJSON() for journey in data["journeys"]]
         return jsonify(journeys)
     

@@ -56,6 +56,9 @@ body, html {
 .icon.national-rail {
     background-image: url('../icons/national-rail.png');
 }
+.icon.dlr {
+    background-image: url('../icons/dlr.png');
+}
 
 .journey {
     border: 1px solid #ccc;

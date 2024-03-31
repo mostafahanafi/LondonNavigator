@@ -66,15 +66,29 @@ function findRoute() {
         },
         body: `start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw response.json();
+        }
+        return response.json();
+    })
     .then(data => {
+        if (data.error) {
+            alert(data.message);
+            return;
+        }
         journeys = data;
         displayJourneys(journeys);
         if (journeys.length > 0) {
             toggleJourney(document.querySelector('.journey h3'), 0);
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        error.then(errorMsg => {
+            console.log('Error:', errorMsg.message);
+            alert(errorMsg.message);
+        });
+    });
 }
 
 function drawRoute(legs) {
@@ -114,6 +128,10 @@ function getPolylineStyle(mode, line) {
         style.color = tubeLineColour(line);
     } else if (mode === 'elizabeth-line') {
         style.color = '#773dbd';
+    } else if (mode === 'dlr') {
+        style.color = '#00afa9';
+    } else if (mode === 'national-rail') {
+        style.color = nationalRailColour(line);
     }
 
     return style;
@@ -126,7 +144,7 @@ function tubeLineColour(line) {
         'Central': '#e1251b',
         'Circle': '#ffcc00',
         'District': '#007934',
-        'Hammersmith-City': '#ec9bad',
+        'Hammersmith & City': '#ec9bad',
         'Jubilee': '#7b868c',
         'Metropolitan': '#870f54',
         'Northern': '#000000',
@@ -136,6 +154,47 @@ function tubeLineColour(line) {
     };
 
     return colours[line] || 'grey';
+}
+
+function nationalRailColour(line) {
+    // Source: https://en.wikipedia.org/wiki/Template:National_Rail_colour
+    var colours = {
+        'Avanti West Coast': '#004354',
+        'c2c': '#b7007c',
+        'Chiltern Railways': '#00bfff',
+        'Cross Country': '#660f21',
+        'East Midlands Railway': '#ffa500',
+        'First Hull Trains': '#de005c',
+        'First TransPennine Express': '#010385',
+        'Gatwick Express': '#eb1e2d',
+        'Grand Central': '#1d1d1b',
+        'Greater Anglia': '#d70428',
+        'Great Northern': '#0099ff',
+        'Great Western Railway': '#0a493e',
+        'Heathrow Express': '#532e63',
+        'Island Line': '#1e90ff',
+        'London North Eastern Railway': '#d70e35',
+        'Lumo': '#2b6ef5',
+        'Merseyrail': '#fff200',
+        'Northern Rail': '#262262',
+        'ScotRail': '#1e467d',
+        'Southeastern': '#389cff',
+        'Southern': '#8cc63e',
+        'South Western Railway': '#ee1c23',
+        'Thameslink': '#ff5aa4',
+        'Transport for Wales': '#ff0000',
+        'West Midlands Trains': '#ff8300'
+    };
+
+    return colours[line] || 'grey';
+}
+
+function foregroundColor(colour) {
+    let r = parseInt(colour.substr(1, 2), 16);
+    let g = parseInt(colour.substr(3, 2), 16);
+    let b = parseInt(colour.substr(5, 2), 16);
+    let luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return luminance > 128 ? 'black' : 'white';
 }
 
 function displayJourneys(journeys) {
@@ -159,6 +218,13 @@ function displayJourneys(journeys) {
                 iconText += `<small style="color: ${tubeLineColour(line)};">${line}</small>`;
             } else if (leg.mode === 'elizabeth-line') {
                 iconText += `<small style="color: #773dbd;">Elizabeth</small>`;
+            } else if (leg.mode === 'dlr') {
+                iconText += `<small style="background-color: #00afa9; color: white; padding: 0 3px;">DLR</small>`;
+            } else if (leg.mode === 'national-rail') {
+                let line = journey.mapData[index].line;
+                let bg = nationalRailColour(line);
+                let fg = foregroundColor(bg);
+                iconText += `<small style="background-color: ${bg}; color: ${fg}; padding: 0 3px;">${line}</small>`;
             }
 
             return `<span class="icon-text">${iconText}</span>`
