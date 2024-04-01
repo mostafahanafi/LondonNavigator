@@ -59,6 +59,9 @@ body, html {
 .icon.dlr {
     background-image: url('../icons/dlr.png');
 }
+.icon.river-bus {
+    background-image: url('../icons/river-bus.png');
+}
 
 .journey {
     border: 1px solid #ccc;

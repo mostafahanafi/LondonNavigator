@@ -16,11 +16,18 @@ class Journey():
         return date_time_obj.strftime("%H:%M")
 
     def getMapData(self):
-        map_details = [{
-            "coordinates": json.loads(leg["path"]["lineString"]),
-            "mode": leg["mode"]["name"],
-            "line": leg["routeOptions"][0]["name"]
-        } for leg in self.legs]
+        map_details = []
+        for leg in self.legs:
+            map_leg = {}
+            
+            map_leg["coordinates"] = json.loads(leg["path"]["lineString"])
+            map_leg["mode"] = leg["mode"]["name"]
+            if map_leg["mode"] == "river-bus":
+                map_leg["line"] = leg["routeOptions"][0]["lineIdentifier"]["name"]
+            else:
+                map_leg["line"] = leg["routeOptions"][0]["name"]
+
+            map_details.append(map_leg)
 
         return map_details
     

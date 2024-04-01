@@ -132,6 +132,8 @@ function getPolylineStyle(mode, line) {
         style.color = '#00afa9';
     } else if (mode === 'national-rail') {
         style.color = nationalRailColour(line);
+    } else if (mode === 'river-bus') {
+        style.color = riverBusColour(line);
     }
 
     return style;
@@ -189,6 +191,18 @@ function nationalRailColour(line) {
     return colours[line] || 'grey';
 }
 
+function riverBusColour(line) {
+    var colours = {
+        'RB1': '#2d3039',
+        'RB2': '#0072bc',
+        'RB4': '#61c29d',
+        'Thames River Services': '#f7f7f7',
+        'Woolwich Ferry': '#f7931d'
+    }
+
+    return colours[line] || 'grey';
+}
+
 function foregroundColor(colour) {
     let r = parseInt(colour.substr(1, 2), 16);
     let g = parseInt(colour.substr(3, 2), 16);
@@ -215,7 +229,9 @@ function displayJourneys(journeys) {
                 iconText += `<small style="background-color: #e1251b; color: white; padding: 0 3px;">${busNumber}</small>`;
             } else if (leg.mode === 'tube') {
                 let line = journey.mapData[index].line;
-                iconText += `<small style="color: ${tubeLineColour(line)};">${line}</small>`;
+                let bg = tubeLineColour(line);
+                let fg = foregroundColor(bg);
+                iconText += `<small style="background-color: ${bg}; color: ${fg}; padding: 0 3px">${line}</small>`;
             } else if (leg.mode === 'elizabeth-line') {
                 iconText += `<small style="color: #773dbd;">Elizabeth</small>`;
             } else if (leg.mode === 'dlr') {
@@ -225,6 +241,11 @@ function displayJourneys(journeys) {
                 let bg = nationalRailColour(line);
                 let fg = foregroundColor(bg);
                 iconText += `<small style="background-color: ${bg}; color: ${fg}; padding: 0 3px;">${line}</small>`;
+            } else if (leg.mode === 'river-bus') {
+                let riverBusNumber = journey.mapData[index].line;
+                let bg = riverBusColour(riverBusNumber);
+                let fg = foregroundColor(bg);
+                iconText += `<small style="background-color: ${bg}; color: ${fg}; padding: 0 3px;">${riverBusNumber}</small>`;
             }
 
             return `<span class="icon-text">${iconText}</span>`
