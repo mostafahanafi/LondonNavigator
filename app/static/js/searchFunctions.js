@@ -43,6 +43,13 @@ function setupAddressInput(inputId, suggestionsId) {
             .catch(error => console.error('Error:', error));
         }, 1000); // Delay of 2 seconds (2000 milliseconds)
     });
+
+    // Hide suggestions if clicked somewhere else
+    document.addEventListener('click', function(event) {
+        if (!input.contains(event.target) && !suggestions.contains(event.target)) {
+            suggestions.innerHTML = '';
+        }
+    });
 }
 
 setupAddressInput('start', 'startSuggestions');

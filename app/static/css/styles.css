@@ -95,3 +95,27 @@ body, html {
 .journey-summary {
     flex-grow: 1;
 }
+
+#startSuggestions, #endSuggestions {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 10000;
+    border: 1px solid #ccc;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.suggestion {
+    padding: 5px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestion:last-child {
+    border-bottom: none;
+}
+
+.suggestion:hover {
+    background-color: #f9f9f9;
+}
