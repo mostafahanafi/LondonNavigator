@@ -218,11 +218,25 @@ function displayJourneys(journeys) {
         </div>
         `;
         var journeyDetails = document.createElement('div');
-        journeyDetails.innerHTML = journey.legs.map((leg, legIndex) => `
+        // journeyDetails.innerHTML = journey.legs.map((leg, legIndex) => `
+        //     <div class="leg">
+        //         <p>${leg.instructions} (${leg.startTime} - ${leg.arrivalTime})</p>
+        //     </div>
+        // `).join('');
+        journeyDetails.innerHTML = journey.legs.map((leg, legIndex) => {
+            let disruptionInfo = '';
+            if (leg.disruptions) {
+                disruptionInfo = leg.disruptions.map(disruption => {
+                    return `<p class="disruption"><b>${disruption.category}:</b> ${disruption.description}</p>`
+                }).join('');
+            }
+            return `
             <div class="leg">
                 <p>${leg.instructions} (${leg.startTime} - ${leg.arrivalTime})</p>
+                ${disruptionInfo}
             </div>
-        `).join('');
+            `;
+        }).join('');
 
         journeyDiv.appendChild(journeyHeader);
         journeyDiv.appendChild(journeyDetails);

@@ -56,6 +56,9 @@ class Journey():
                 instructions = leg_data["instructions"].split(" ")
                 instructions.insert(1, f"{leg_data['duration']} minutes")
                 leg_data["instructions"] = " ".join(instructions)
+            if leg["isDisrupted"]:
+                leg_data["disruptions"] = leg["disruptions"]
+            
             json_data["legs"].append(leg_data)
         
 
