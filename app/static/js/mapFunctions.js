@@ -247,13 +247,15 @@ function displayJourneys(journeys) {
 
 document.getElementById('journeyDetails').addEventListener('click', function(event) {
     let targetElement = event.target;
-    // traverse up the DOM to find if the click was on a journey header
-    while (targetElement && targetElement.tagName !== 'H3') {
+    // traverse up the DOM to find if the click was on a journey header (H3) or disruption info (.disruption)
+    while (targetElement && targetElement.tagName !== 'H3' && !targetElement.classList.contains('disruption')) {
         targetElement = targetElement.parentElement;
     }
     if (targetElement && targetElement.tagName === 'H3') {
         var index = Array.from(this.children).indexOf(targetElement.parentElement);
         toggleJourney(targetElement, index);
+    } else if (targetElement && targetElement.classList.contains('disruption')) {
+        targetElement.classList.toggle('expanded');
     }
 });
 

@@ -119,3 +119,23 @@ body, html {
 .suggestion:hover {
     background-color: #f9f9f9;
 }
+
+.journeys-container {
+    overflow-y: auto;
+    max-width: 33vw;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.disruption {
+    background-color: #ffc5c5;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.expanded {
+    white-space: normal;
+    text-overflow: clip;
+}

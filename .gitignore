@@ -1,6 +1,5 @@
 # CUSTOM ADDITIONS
-example_api.json
-disruption_api.json
+/example_api_calls/
 .DS_Store
 
 # Byte-compiled / optimized / DLL files
