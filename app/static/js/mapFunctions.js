@@ -90,6 +90,8 @@ function getPolylineStyle(mode, line) {
         style.color = nationalRailColour(line);
     } else if (mode === 'river-bus') {
         style.color = riverBusColour(line);
+    } else if (mode === 'overground') {
+        style.color = '#ee7623';
     }
 
     return style;
@@ -202,6 +204,8 @@ function displayJourneys(journeys) {
                 let bg = riverBusColour(riverBusNumber);
                 let fg = foregroundColor(bg);
                 iconText += `<small style="background-color: ${bg}; color: ${fg}; padding: 0 3px;">${riverBusNumber}</small>`;
+            } else if (leg.mode === 'overground') {
+                iconText += `<small style="background-color: #ee7623; color: white; padding: 0 3px;">Overground</small>`;
             }
 
             return `<span class="icon-text">${iconText}</span>`
