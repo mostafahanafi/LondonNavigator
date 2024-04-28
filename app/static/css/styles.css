@@ -42,28 +42,28 @@ body, html {
     margin-right: 15px;
 }
 .icon.walking { 
-    background-image: url('../icons/walking.png');
+    background-image: url('../icons/modes/walking.png');
 }
 .icon.bus { 
-    background-image: url('../icons/bus.png');
+    background-image: url('../icons/modes/bus.png');
 }
 .icon.tube { 
-    background-image: url('../icons/tube.png');
+    background-image: url('../icons/modes/tube.png');
 }
 .icon.elizabeth-line {
-    background-image: url('../icons/elizabeth.png');
+    background-image: url('../icons/modes/elizabeth.png');
 }
 .icon.national-rail {
-    background-image: url('../icons/national-rail.png');
+    background-image: url('../icons/modes/national-rail.png');
 }
 .icon.dlr {
-    background-image: url('../icons/dlr.png');
+    background-image: url('../icons/modes/dlr.png');
 }
 .icon.river-bus {
-    background-image: url('../icons/river-bus.png');
+    background-image: url('../icons/modes/river-bus.png');
 }
 .icon.overground {
-    background-image: url('../icons/overground.png');
+    background-image: url('../icons/modes/overground.png');
 }
 
 .journey {
@@ -93,6 +93,7 @@ body, html {
 .journey-duration {
     margin-left: auto;
     padding-left: 10px;
+    text-align: right;
 }
 
 .journey-summary {
@@ -131,14 +132,43 @@ body, html {
 }
 
 .disruption {
-    background-color: #ffc5c5;
+    cursor: pointer;
+    display: flex;
+    margin: 5px 0;
+}
+
+.disruption p {
+    margin: 0;
+    padding: 5px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    cursor: pointer;
 }
 
-.expanded {
+.disruption.expanded p {
     white-space: normal;
     text-overflow: clip;
+}
+
+.disruption-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: auto;
+    display: block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 4px;
+    background-position: center;
+}
+
+.RealTime {
+    background-color: #ffc5c5;
+}
+.Information {
+    background-color: #ccddff;
+}
+.PlannedWork {
+    background-color: #ffcc99;
 }

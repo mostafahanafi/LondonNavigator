@@ -215,7 +215,7 @@ function displayJourneys(journeys) {
         journeyHeader.innerHTML = `
         <div class="journey-header-top">
             <span class="journey-summary">${journeySummary}</span>
-            <span class="journey-duration">${journey.duration} minutes</span>
+            <span class="journey-duration">${journey.duration} min</span>
         </div>
         <div class="journey-header-bottom">
             <p>${journey.startTime} - ${journey.arrivalTime}</p>
@@ -230,9 +230,7 @@ function displayJourneys(journeys) {
         journeyDetails.innerHTML = journey.legs.map((leg, legIndex) => {
             let disruptionInfo = '';
             if (leg.disruptions) {
-                disruptionInfo = leg.disruptions.map(disruption => {
-                    return `<p class="disruption"><b>${disruption.category}:</b> ${disruption.description}</p>`
-                }).join('');
+                disruptionInfo = createDisruptionInfo(leg.disruptions);
             }
             return `
             <div class="leg">
@@ -247,6 +245,17 @@ function displayJourneys(journeys) {
 
         detailsContainer.appendChild(journeyDiv);
     });
+}
+
+function createDisruptionInfo(disruptions) {
+    return disruptions.map(disruption => {
+        return `
+        <div class="disruption ${disruption.category}">
+            <div class="disruption-icon" style="background-image: url('/static/icons/disruptions/${disruption.category.toLowerCase()}.png')"></div>
+            <p>${disruption.description}</p>
+        </div>
+        `;
+    }).join('');
 }
 
 document.getElementById('journeyDetails').addEventListener('click', function(event) {
