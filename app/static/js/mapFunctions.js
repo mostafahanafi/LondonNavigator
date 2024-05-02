@@ -1,11 +1,131 @@
-var map = L.map('map').setView([51.505, -0.09], 13);
+var latMin = 51.28;
+var latMax = 51.686;
+var lonMin = -0.489;
+var lonMax = 0.236;
+
+var map = L.map('map', {
+    contextmenu: true,
+    contextmenuWidth: 140,
+    contextmenuItems: [{
+        text: 'Start here',
+        callback: startHere,
+    }, {
+        text: 'End here',
+        callback: endHere,
+    }]
+}).setView([51.505, -0.09], 13);
 var polylines = [];
 var journeys;
+
+var endIcon = new L.Icon({
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+var startIcon = new L.Icon({
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+var startMarker, endMarker, clickMarker;
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
+
+function startHere(e) {
+    // check if location is within London
+    if (e.latlng.lat < latMin || e.latlng.lat > latMax || e.latlng.lng < lonMin || e.latlng.lng > lonMax) {
+        alert('Please select a location within London.');
+        return;
+    } else {
+    // set start input field value
+        var start = document.getElementById('start');
+        start.value = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+        start.setAttribute('data-lon', e.latlng.lng.toFixed(5));
+        start.setAttribute('data-lat', e.latlng.lat.toFixed(5));
+    }
+    // remove previous START marker, if any
+    if (startMarker) {
+        map.removeLayer(startMarker);
+    }
+    // add new START marker
+    startMarker = L.marker(e.latlng, {
+        icon: startIcon,
+        contextmenu: true,
+        contextmenuItems: [{
+            text: `Start: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`,
+            index: 0
+        }, {
+            separator: true,
+            index: 1
+        }]
+    }).addTo(map);
+}
+
+function endHere(e) {
+    if (e.latlng.lat < latMin || e.latlng.lat > latMax || e.latlng.lng < lonMin || e.latlng.lng > lonMax) {
+        alert('Please select a location within London.');
+        return;
+    } else {
+        var end = document.getElementById('end');
+        end.value = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+        end.setAttribute('data-lon', e.latlng.lng.toFixed(5));
+        end.setAttribute('data-lat', e.latlng.lat.toFixed(5));
+    }
+    if (endMarker) {
+        map.removeLayer(endMarker);
+    }
+    endMarker = L.marker(e.latlng, {
+        icon: endIcon,
+        contextmenu: true,
+        contextmenuItems: [{
+            text: `End: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`,
+            index: 0
+        }, {
+            separator: true,
+            index: 1
+        }]
+    }).addTo(map);
+}
+
+function onMapClick(e) {
+    if (clickMarker) {
+        map.removeLayer(clickMarker);
+    }
+    // add new click marker
+    clickMarker = L.marker(e.latlng, {
+        contextmenu: true,
+        contextmenuInheritItems: false,
+        contextmenuItems: [{
+            // display coordinates
+            text: `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`,
+            index: 0
+        }, {
+            separator: true,
+            index: 1
+        }, {
+            text: 'Start here',
+            callback: () => startHere(e),
+            index: 2
+        }, {
+            text: 'End here',
+            callback: () => endHere(e),
+            index: 3
+        }]
+    }).addTo(map);
+}
+
+map.on('click', onMapClick);
 
 function findRoute() {
     var startLon = document.getElementById('start').getAttribute('data-lon');
