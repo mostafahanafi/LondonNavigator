@@ -36,3 +36,7 @@ def init_routes(app):
         
         data = response.json()
         return jsonify(data)
+    
+    @app.route('/chat', methods=['GET'])
+    def chat():
+        return render_template('chat.html')

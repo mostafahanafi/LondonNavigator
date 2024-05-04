@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LondonNavigator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/chatFunctions.js') }}" defer></script>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="chat-container">
+            <div id="chat" class="chat"></div>
+            <textarea id="message" class="chat-input" placeholder="Ask about routes, disruptions, preferences..." rows="2"></textarea>
+            <button id="send" class="chat-send" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+</body>
+</html>

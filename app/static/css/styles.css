@@ -172,3 +172,63 @@ body, html {
 .PlannedWork {
     background-color: #ffcc99;
 }
+
+.chat-container {
+    width: 90%;
+    max-width: 500px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.chat {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+.chat-send {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.chat-send:hover {
+    background-color: #0056b3;
+}
+
+.message {
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 10px;
+    background-color: #e0e0e0;
+    width: fit-content;
+    max-width: 70%;
+}
+
+.message.outgoing {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+}
+
+.message.incoming {
+    background-color: #e6e6e6;
+    align-self: flex-start;
+}
