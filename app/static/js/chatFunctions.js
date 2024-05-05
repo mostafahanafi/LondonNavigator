@@ -7,12 +7,23 @@ function sendMessage() {
     chat.appendChild(messageElement);
     document.getElementById("message").value = '';
 
-    // Simulate a response from the LLM
-    setTimeout(function() {
+    fetch('/chat', {
+        method: 'POST',
+        body: `message=${encodeURIComponent(message)}`,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
         var replyElement = document.createElement('div');
         replyElement.className = 'message incoming';
-        replyElement.innerText = "Here's your response from LLM!";
+        replyElement.innerText = data;
         chat.appendChild(replyElement);
         chat.scrollTop = chat.scrollHeight; 
-    }, 1200);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }

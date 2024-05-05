@@ -1,6 +1,11 @@
 from flask import render_template, request, jsonify
 import requests
 from .models import Journey
+from openai import OpenAI
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 def init_routes(app):
     @app.route('/', methods=['GET'])
@@ -40,3 +45,21 @@ def init_routes(app):
     @app.route('/chat', methods=['GET'])
     def chat():
         return render_template('chat.html')
+    
+    @app.route('/chat', methods=['POST'])
+    def chat_post():
+        openai = OpenAI()
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+        
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{
+                "role": "system",
+                "content": "You are a helpful assistant."
+            }, {
+                "role": "user",
+                "content": request.form["message"]
+            }]
+        )
+        
+        return jsonify(response.choices[0].message.content)
