@@ -8,7 +8,11 @@
 <body>
     <div class="content-wrapper">
         <div class="chat-container">
-            <div id="chat" class="chat"></div>
+            <div id="chat" class="chat">
+                <div class="message incoming">
+                    Hi! I'm your AI-powered navigation assistant! Ask me questions about routes (e.g. 'How can I get from X to Y?'), disruptions (e.g. 'Is the Circle Line fine right now?'), or both (e.g. 'I want to get from A to B, are there any disruptions I should be aware of?'), and I'll do my best to help!
+                </div>
+            </div>
             <textarea id="message" class="chat-input" placeholder="Ask about routes, disruptions, preferences..." rows="2"></textarea>
             <button id="send" class="chat-send" onclick="sendMessage()">Send</button>
         </div>
