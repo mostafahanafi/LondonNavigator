@@ -70,8 +70,10 @@ Here are the types of queries you should be able to handle:
 
 Here are the variables you should extract for each type of query:
 - "ROUTE": start_location, end_location
-- "DISRUPTION": line_name, service_name
-- "BOTH": start_location, end_location
+- "DISRUPTION": line_name OR mode_name
+If the queried line is an underground line, you should use the appropriate
+line ID ("bakerloo", "central", "circle", "district", "hammersmith-city",
+"jubilee", "metropolitan", "northern", "piccadilly", "victoria", "waterloo-city").
 
 You should return a response in JSON format that includes the extracted variables
 e.g. {"type": "ROUTE", "start_location": "A", "end_location": "B"}
@@ -171,6 +173,45 @@ Here is an example JSON object:
                 }, {
                     "role": "user",
                     "content": f"{request.form['message']}\n{json.dumps(journeys)}"
+                }]
+            )
+
+            return jsonify(final_response.choices[0].message.content)
+        
+        elif chat_response["type"] == "DISRUPTION":
+            # Extract line_name or mode_name
+            line_name = chat_response.get("line_name", None)
+            mode_name = chat_response.get("mode_name", None)
+
+            # Use TFL API to get disruption data
+            if mode_name:
+                url = f"https://api.tfl.gov.uk/Line/Mode/{mode_name}/Disruption"
+            elif line_name:
+                url = f"https://api.tfl.gov.uk/Line/{line_name}/Disruption"
+            else:
+                return jsonify("I'm sorry, I don't understand that question.")
+            disruption_response = requests.get(url)
+            disruption_data = disruption_response.json()
+            
+            # Use OpenAI to get response
+            final_response = openai.chat.completions.create(
+                model="gpt-4-turbo-2024-04-09",
+                messages=[{
+                    "role": "system",
+                    "content": """You are an assistant part of an intelligent AI
+system designed to help users navigate public transportation in London. Your job 
+is to read in an internal JSON object containing a list of disruptions either to a
+specific line or to a specific mode of transport. Your role is to summarize the
+disruption information and provide a response that is clear and concise, and that
+helps the user understand the current status of the line or mode of transport. The
+original user query will be shared with you as context, and you should use this to
+tailor your response to the user's needs and answer their question. If you receive
+an empty JSON object, you should respond with a message indicating that there are
+no disruptions on the specified line or mode of transport.
+    """
+                }, {
+                    "role": "user",
+                    "content": f"{request.form['message']}\n{json.dumps(disruption_data)}"
                 }]
             )
 
